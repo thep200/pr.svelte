@@ -28,15 +28,57 @@ Cấu trúc của một file `.svelte` tương tự vue, gồm có 3 phần riê
 ## Cú pháp
 Cú pháp thường sử dụng
 ```js
-bind:value={var} : gán giá trị cho biến var
-on:click={foo}  : gán sự kiện click gọi hàm foo
+// Bind everything
+bind:this={var}                                  : Gán một DOM cho một biến và thực hiện logic cho DOM thông qua biến đó.
+let myInput; // Tạo một biến để lưu trữ tham chiếu đến phần tử DOM
+function focusInput() {
+myInput.focus(); // Gọi phương thức `focus()` của phần tử DOM
+}
+<input bind:this={myInput} type="text" placeholder="Type something..." />
+
+bind:offsetHeight={var}                          : gán giá trị cho biến var
+bind:value={var}                                 : gán giá trị cho biến var
+// on:eventname|modifiers_1|modifiers_2={handler}
+on:click={foo}                                   : gán sự kiện click gọi hàm foo
+<div>{(/^[A-Za-z]+$/).test(value) ? x : y}</div> : Kết hợp regex để render
+$: console.log('foo: ', foo);                    : Khi foo thay đổi thì thực hiện câu lệnh đằng sau `$:`
 ```
+
+<script context="module">
+- Chạy một lần khi component đầu tiên được bind vào thay vì chạy mỗi lần.
+- Các giá trị và thư viện trong khối này được truy cập bình thường từ một thẻ <script> thông thường.
+- Thường được sử dụng để khai báo các hằng số, import thư viện trong một component.
+- Sử dụng cho các tác vụ tiền biên dịch.
 
 Vòng lặp
 ```js
-{#each items as item}
-    <li>{item}</li>
-{/each}
+{#each items as item} ... {/each}
+{#each items as item, index} ... {/each}
+{#each items as { prop_1, prop_2 }, index} ... {/each}   : sử dụng destruction
+{#each items as { prop_1, ...rest }, index} ... {/each}  : sử dụng destruction
+{#each items as item (key)} ... {/each}
+{#each items as item, index (key)} ... {/each}           : key được sử dụng để chúng ta retrieve lại phần tử của mảng vd: items[key]
+{#each items as item} ... {:else} ... {/each}            : Khi items rỗng thì sẽ run khối code đằng sau else
+```
+
+Await
+```js
+{#await promise}
+	<!-- promise is pending -->
+	<p>waiting for the promise to resolve...</p>
+{:then value}
+	<!-- promise was fulfilled -->
+	<p>The value is {value}</p>
+{:catch error}
+	<!-- promise was rejected -->
+	<p>Something went wrong: {error.message}</p>
+{/await}
+```
+
+Key
+```js
+// Khi expression thay đổi thì key rerender lại nội dung bên trong nó
+{#key expression} ... {/key}
 ```
 
 Cấu trúc điều kiện
@@ -136,3 +178,16 @@ import { derived } from 'svelte/store';
 import { count } from './writeStore';
 export const fooCount = derived(count, $count => $count * 5);
 ```
+
+## Tricks
+Chúng ta có thể `bind:files` trực tiếp trong thẻ input để lấy list file
+```js
+<input accept="image/png, image/jpeg" bind:files id="avatar" name="avatar" type="file" />
+```
+
+<svelte:self> Cho phép một component có thể chứ chính nó. Đệ quy
+```js
+<svelte:self>
+```
+
+<svelte:component this={expression}> render component theo điều kiện đặt trước.

@@ -1,33 +1,24 @@
 <script>
     import { afterUpdate, beforeUpdate, onMount, setContext } from "svelte";
     import Header from "./Header.svelte";
+    import { count } from "./store/writeStore";
 
-    onMount(() => {
-        console.log('foo1');
-    });
+    onMount(() => { console.log('foo1'); });
+    beforeUpdate(() => { console.log('foo2'); });
+    afterUpdate(() => { console.log('foo3'); });
 
-    beforeUpdate(() => {
-        console.log('foo2');
-    });
-
-    afterUpdate(() => {
-        console.log('foo3');
-    });
-
+    let name = null;
+    let status = null;
     let items = [
         {
             name: 'Ngu',
             status: 'done',
         }
     ];
-
-    let name = null;
-    let status = null;
-
     function addToDo()
     {
         if (name == null || status == null) {
-            alert('Name vaf status khogn duowc de null!');
+            alert('Name and status are required!');
             return;
         };
         items = [...items, {
@@ -41,11 +32,30 @@
     let smallTitle = 'Small event from parent';
     function getDataFromChild(event)
     {
-        console.log('foo: ', event.detail);
         smallTitle = event.detail;
     }
 
-    import { count } from "./store/writeStore";
+    let users = [
+        {
+            name: 'Jonh',
+            age: 15,
+        },
+        {
+            name: 'Peter',
+            age: 12,
+        },
+        {
+            name: 'Alice',
+            age: 17,
+        },
+    ];
+
+    let badUser = [];
+    let cool = 0;
+    $: console.log('foo: ', cool);
+    function increaseCool() {
+        cool++;
+    }
 </script>
 
 <main>
@@ -76,6 +86,31 @@
             </li>
         {/each}
     </ul>
+
+    <button type="button" on:click={increaseCool}>change cool</button><br>
+
+    <!-- Loop -->
+    <small>Each with index</small>
+    {#each users as user, index (user.age)}
+        <p>{index}. {user.name}</p>
+    {/each}
+
+
+    <small>Each with destruction</small>
+    {#each users as {name, age}, index}
+        <p>{index}. {name} : {age}</p>
+    {/each}
+
+    <small>Each with else</small>
+    {#each badUser as user, index}
+        <p>{index}. {user.name}</p>
+    {:else}
+        <p>No user found</p>
+    {/each}
+
+    {#key badUser}
+        badUser: {badUser}
+    {/key}
 </main>
 
 <style>

@@ -63,6 +63,12 @@ var app = (function () {
             node.parentNode.removeChild(node);
         }
     }
+    function destroy_each(iterations, detaching) {
+        for (let i = 0; i < iterations.length; i += 1) {
+            if (iterations[i])
+                iterations[i].d(detaching);
+        }
+    }
     function element(name) {
         return document.createElement(name);
     }
@@ -942,12 +948,34 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[9] = list[i];
+    	child_ctx[13] = list[i];
+    	child_ctx[15] = i;
     	return child_ctx;
     }
 
-    // (73:16) {:else}
-    function create_else_block(ctx) {
+    function get_each_context_1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[4] = list[i].name;
+    	child_ctx[16] = list[i].age;
+    	child_ctx[15] = i;
+    	return child_ctx;
+    }
+
+    function get_each_context_2(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[13] = list[i];
+    	child_ctx[15] = i;
+    	return child_ctx;
+    }
+
+    function get_each_context_3(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[19] = list[i];
+    	return child_ctx;
+    }
+
+    // (83:16) {:else}
+    function create_else_block_1(ctx) {
     	let t;
 
     	const block = {
@@ -964,16 +992,16 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block.name,
+    		id: create_else_block_1.name,
     		type: "else",
-    		source: "(73:16) {:else}",
+    		source: "(83:16) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (71:52) 
+    // (81:52) 
     function create_if_block_1(ctx) {
     	let t;
 
@@ -993,14 +1021,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(71:52) ",
+    		source: "(81:52) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (69:16) {#if item.status == 'done'}
+    // (79:16) {#if item.status == 'done'}
     function create_if_block(ctx) {
     	let t;
 
@@ -1020,18 +1048,18 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(69:16) {#if item.status == 'done'}",
+    		source: "(79:16) {#if item.status == 'done'}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (65:8) {#each items as item (item)}
-    function create_each_block(key_1, ctx) {
+    // (75:8) {#each items as item (item)}
+    function create_each_block_3(key_1, ctx) {
     	let li0;
     	let t0;
-    	let t1_value = /*item*/ ctx[9].name + "";
+    	let t1_value = /*item*/ ctx[19].name + "";
     	let t1;
     	let t2;
     	let br;
@@ -1041,9 +1069,9 @@ var app = (function () {
     	let t5;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*item*/ ctx[9].status == 'done') return create_if_block;
-    		if (/*item*/ ctx[9].status == 'waitting') return create_if_block_1;
-    		return create_else_block;
+    		if (/*item*/ ctx[19].status == 'done') return create_if_block;
+    		if (/*item*/ ctx[19].status == 'waitting') return create_if_block_1;
+    		return create_else_block_1;
     	}
 
     	let current_block_type = select_block_type(ctx);
@@ -1063,9 +1091,9 @@ var app = (function () {
     			t4 = text("Status:\n                ");
     			if_block.c();
     			t5 = space();
-    			add_location(br, file, 65, 34, 1436);
-    			add_location(li0, file, 65, 12, 1414);
-    			add_location(li1, file, 66, 12, 1458);
+    			add_location(br, file, 75, 34, 1704);
+    			add_location(li0, file, 75, 12, 1682);
+    			add_location(li1, file, 76, 12, 1726);
     			this.first = li0;
     		},
     		m: function mount(target, anchor) {
@@ -1082,7 +1110,7 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty & /*items*/ 1 && t1_value !== (t1_value = /*item*/ ctx[9].name + "")) set_data_dev(t1, t1_value);
+    			if (dirty & /*items*/ 2 && t1_value !== (t1_value = /*item*/ ctx[19].name + "")) set_data_dev(t1, t1_value);
 
     			if (current_block_type !== (current_block_type = select_block_type(ctx))) {
     				if_block.d(1);
@@ -1104,9 +1132,169 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
+    		id: create_each_block_3.name,
+    		type: "each",
+    		source: "(75:8) {#each items as item (item)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (94:4) {#each users as user, index (user.age)}
+    function create_each_block_2(key_1, ctx) {
+    	let p;
+    	let t0_value = /*index*/ ctx[15] + "";
+    	let t0;
+    	let t1;
+    	let t2_value = /*user*/ ctx[13].name + "";
+    	let t2;
+
+    	const block = {
+    		key: key_1,
+    		first: null,
+    		c: function create() {
+    			p = element("p");
+    			t0 = text(t0_value);
+    			t1 = text(". ");
+    			t2 = text(t2_value);
+    			add_location(p, file, 94, 8, 2191);
+    			this.first = p;
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, t0);
+    			append_dev(p, t1);
+    			append_dev(p, t2);
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_2.name,
+    		type: "each",
+    		source: "(94:4) {#each users as user, index (user.age)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (100:4) {#each users as {name, age}
+    function create_each_block_1(ctx) {
+    	let p;
+    	let t0;
+    	let t1;
+    	let t2_value = /*name*/ ctx[4] + "";
+    	let t2;
+    	let t3;
+    	let t4_value = /*age*/ ctx[16] + "";
+    	let t4;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			t0 = text(/*index*/ ctx[15]);
+    			t1 = text(". ");
+    			t2 = text(t2_value);
+    			t3 = text(" : ");
+    			t4 = text(t4_value);
+    			add_location(p, file, 100, 8, 2322);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, t0);
+    			append_dev(p, t1);
+    			append_dev(p, t2);
+    			append_dev(p, t3);
+    			append_dev(p, t4);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1.name,
+    		type: "each",
+    		source: "(100:4) {#each users as {name, age}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (107:4) {:else}
+    function create_else_block(ctx) {
+    	let p;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			p.textContent = "No user found";
+    			add_location(p, file, 107, 8, 2491);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(107:4) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (105:4) {#each badUser as user, index}
+    function create_each_block(ctx) {
+    	let p;
+    	let t0;
+    	let t1;
+    	let t2_value = /*user*/ ctx[13].name + "";
+    	let t2;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			t0 = text(/*index*/ ctx[15]);
+    			t1 = text(". ");
+    			t2 = text(t2_value);
+    			add_location(p, file, 105, 8, 2443);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, t0);
+    			append_dev(p, t1);
+    			append_dev(p, t2);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(65:8) {#each items as item (item)}",
+    		source: "(105:4) {#each badUser as user, index}",
     		ctx
     	});
 
@@ -1130,11 +1318,28 @@ var app = (function () {
     	let t9;
     	let input1;
     	let t10;
-    	let button;
+    	let button0;
     	let t12;
     	let ul;
-    	let each_blocks = [];
-    	let each_1_lookup = new Map();
+    	let each_blocks_3 = [];
+    	let each0_lookup = new Map();
+    	let t13;
+    	let button1;
+    	let br;
+    	let t15;
+    	let small0;
+    	let t17;
+    	let each_blocks_2 = [];
+    	let each1_lookup = new Map();
+    	let t18;
+    	let small1;
+    	let t20;
+    	let t21;
+    	let small2;
+    	let t23;
+    	let t24;
+    	let t25;
+    	let t26;
     	let current;
     	let mounted;
     	let dispose;
@@ -1145,15 +1350,48 @@ var app = (function () {
     		});
 
     	header.$on("fooEvent", /*getDataFromChild*/ ctx[6]);
-    	let each_value = /*items*/ ctx[0];
+    	let each_value_3 = /*items*/ ctx[1];
+    	validate_each_argument(each_value_3);
+    	const get_key = ctx => /*item*/ ctx[19];
+    	validate_each_keys(ctx, each_value_3, get_each_context_3, get_key);
+
+    	for (let i = 0; i < each_value_3.length; i += 1) {
+    		let child_ctx = get_each_context_3(ctx, each_value_3, i);
+    		let key = get_key(child_ctx);
+    		each0_lookup.set(key, each_blocks_3[i] = create_each_block_3(key, child_ctx));
+    	}
+
+    	let each_value_2 = /*users*/ ctx[7];
+    	validate_each_argument(each_value_2);
+    	const get_key_1 = ctx => /*user*/ ctx[13].age;
+    	validate_each_keys(ctx, each_value_2, get_each_context_2, get_key_1);
+
+    	for (let i = 0; i < each_value_2.length; i += 1) {
+    		let child_ctx = get_each_context_2(ctx, each_value_2, i);
+    		let key = get_key_1(child_ctx);
+    		each1_lookup.set(key, each_blocks_2[i] = create_each_block_2(key, child_ctx));
+    	}
+
+    	let each_value_1 = /*users*/ ctx[7];
+    	validate_each_argument(each_value_1);
+    	let each_blocks_1 = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks_1[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    	}
+
+    	let each_value = /*badUser*/ ctx[8];
     	validate_each_argument(each_value);
-    	const get_key = ctx => /*item*/ ctx[9];
-    	validate_each_keys(ctx, each_value, get_each_context, get_key);
+    	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		let child_ctx = get_each_context(ctx, each_value, i);
-    		let key = get_key(child_ctx);
-    		each_1_lookup.set(key, each_blocks[i] = create_each_block(key, child_ctx));
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
+    	let each3_else = null;
+
+    	if (!each_value.length) {
+    		each3_else = create_else_block(ctx);
     	}
 
     	const block = {
@@ -1162,9 +1400,9 @@ var app = (function () {
     			create_component(header.$$.fragment);
     			t0 = space();
     			h2 = element("h2");
-    			t1 = text(/*$count*/ ctx[4]);
+    			t1 = text(/*$count*/ ctx[3]);
     			t2 = space();
-    			t3 = text(/*smallTitle*/ ctx[3]);
+    			t3 = text(/*smallTitle*/ ctx[2]);
     			t4 = space();
     			label0 = element("label");
     			label0.textContent = "name";
@@ -1176,28 +1414,72 @@ var app = (function () {
     			t9 = space();
     			input1 = element("input");
     			t10 = space();
-    			button = element("button");
-    			button.textContent = "Add todo";
+    			button0 = element("button");
+    			button0.textContent = "Add todo";
     			t12 = space();
     			ul = element("ul");
+
+    			for (let i = 0; i < each_blocks_3.length; i += 1) {
+    				each_blocks_3[i].c();
+    			}
+
+    			t13 = space();
+    			button1 = element("button");
+    			button1.textContent = "change cool";
+    			br = element("br");
+    			t15 = space();
+    			small0 = element("small");
+    			small0.textContent = "Each with index";
+    			t17 = space();
+
+    			for (let i = 0; i < each_blocks_2.length; i += 1) {
+    				each_blocks_2[i].c();
+    			}
+
+    			t18 = space();
+    			small1 = element("small");
+    			small1.textContent = "Each with destruction";
+    			t20 = space();
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].c();
+    			}
+
+    			t21 = space();
+    			small2 = element("small");
+    			small2.textContent = "Each with else";
+    			t23 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			add_location(h2, file, 55, 4, 1098);
+    			if (each3_else) {
+    				each3_else.c();
+    			}
+
+    			t24 = space();
+    			t25 = text("badUser: ");
+    			t26 = text(/*badUser*/ ctx[8]);
+    			add_location(h2, file, 65, 4, 1366);
     			attr_dev(label0, "for", "status");
-    			add_location(label0, file, 57, 4, 1134);
+    			add_location(label0, file, 67, 4, 1402);
     			attr_dev(input0, "type", "text");
-    			add_location(input0, file, 58, 4, 1171);
+    			add_location(input0, file, 68, 4, 1439);
     			attr_dev(label1, "for", "status");
-    			add_location(label1, file, 59, 4, 1213);
+    			add_location(label1, file, 69, 4, 1481);
     			attr_dev(input1, "type", "text");
-    			add_location(input1, file, 60, 4, 1252);
-    			attr_dev(button, "type", "button");
-    			add_location(button, file, 62, 4, 1297);
-    			add_location(ul, file, 63, 4, 1360);
-    			add_location(main, file, 50, 0, 987);
+    			add_location(input1, file, 70, 4, 1520);
+    			attr_dev(button0, "type", "button");
+    			add_location(button0, file, 72, 4, 1565);
+    			add_location(ul, file, 73, 4, 1628);
+    			attr_dev(button1, "type", "button");
+    			add_location(button1, file, 89, 4, 2014);
+    			add_location(br, file, 89, 70, 2080);
+    			add_location(small0, file, 92, 4, 2108);
+    			add_location(small1, file, 98, 4, 2237);
+    			add_location(small2, file, 103, 4, 2370);
+    			add_location(main, file, 60, 0, 1255);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1214,52 +1496,159 @@ var app = (function () {
     			append_dev(main, label0);
     			append_dev(main, t6);
     			append_dev(main, input0);
-    			set_input_value(input0, /*name*/ ctx[1]);
+    			set_input_value(input0, /*name*/ ctx[4]);
     			append_dev(main, t7);
     			append_dev(main, label1);
     			append_dev(main, t9);
     			append_dev(main, input1);
-    			set_input_value(input1, /*status*/ ctx[2]);
+    			set_input_value(input1, /*status*/ ctx[0]);
     			append_dev(main, t10);
-    			append_dev(main, button);
+    			append_dev(main, button0);
     			append_dev(main, t12);
     			append_dev(main, ul);
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				if (each_blocks[i]) {
-    					each_blocks[i].m(ul, null);
+    			for (let i = 0; i < each_blocks_3.length; i += 1) {
+    				if (each_blocks_3[i]) {
+    					each_blocks_3[i].m(ul, null);
     				}
     			}
 
+    			append_dev(main, t13);
+    			append_dev(main, button1);
+    			append_dev(main, br);
+    			append_dev(main, t15);
+    			append_dev(main, small0);
+    			append_dev(main, t17);
+
+    			for (let i = 0; i < each_blocks_2.length; i += 1) {
+    				if (each_blocks_2[i]) {
+    					each_blocks_2[i].m(main, null);
+    				}
+    			}
+
+    			append_dev(main, t18);
+    			append_dev(main, small1);
+    			append_dev(main, t20);
+
+    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    				if (each_blocks_1[i]) {
+    					each_blocks_1[i].m(main, null);
+    				}
+    			}
+
+    			append_dev(main, t21);
+    			append_dev(main, small2);
+    			append_dev(main, t23);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				if (each_blocks[i]) {
+    					each_blocks[i].m(main, null);
+    				}
+    			}
+
+    			if (each3_else) {
+    				each3_else.m(main, null);
+    			}
+
+    			append_dev(main, t24);
+    			append_dev(main, t25);
+    			append_dev(main, t26);
     			current = true;
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[7]),
-    					listen_dev(input1, "input", /*input1_input_handler*/ ctx[8]),
-    					listen_dev(button, "click", /*addToDo*/ ctx[5], false, false, false, false)
+    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[11]),
+    					listen_dev(input1, "input", /*input1_input_handler*/ ctx[12]),
+    					listen_dev(button0, "click", /*addToDo*/ ctx[5], false, false, false, false),
+    					listen_dev(button1, "click", /*increaseCool*/ ctx[9], false, false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*$count*/ 16) set_data_dev(t1, /*$count*/ ctx[4]);
-    			if (!current || dirty & /*smallTitle*/ 8) set_data_dev(t3, /*smallTitle*/ ctx[3]);
+    			if (!current || dirty & /*$count*/ 8) set_data_dev(t1, /*$count*/ ctx[3]);
+    			if (!current || dirty & /*smallTitle*/ 4) set_data_dev(t3, /*smallTitle*/ ctx[2]);
 
-    			if (dirty & /*name*/ 2 && input0.value !== /*name*/ ctx[1]) {
-    				set_input_value(input0, /*name*/ ctx[1]);
+    			if (dirty & /*name*/ 16 && input0.value !== /*name*/ ctx[4]) {
+    				set_input_value(input0, /*name*/ ctx[4]);
     			}
 
-    			if (dirty & /*status*/ 4 && input1.value !== /*status*/ ctx[2]) {
-    				set_input_value(input1, /*status*/ ctx[2]);
+    			if (dirty & /*status*/ 1 && input1.value !== /*status*/ ctx[0]) {
+    				set_input_value(input1, /*status*/ ctx[0]);
     			}
 
-    			if (dirty & /*items*/ 1) {
-    				each_value = /*items*/ ctx[0];
+    			if (dirty & /*items*/ 2) {
+    				each_value_3 = /*items*/ ctx[1];
+    				validate_each_argument(each_value_3);
+    				validate_each_keys(ctx, each_value_3, get_each_context_3, get_key);
+    				each_blocks_3 = update_keyed_each(each_blocks_3, dirty, get_key, 1, ctx, each_value_3, each0_lookup, ul, destroy_block, create_each_block_3, null, get_each_context_3);
+    			}
+
+    			if (dirty & /*users*/ 128) {
+    				each_value_2 = /*users*/ ctx[7];
+    				validate_each_argument(each_value_2);
+    				validate_each_keys(ctx, each_value_2, get_each_context_2, get_key_1);
+    				each_blocks_2 = update_keyed_each(each_blocks_2, dirty, get_key_1, 1, ctx, each_value_2, each1_lookup, main, destroy_block, create_each_block_2, t18, get_each_context_2);
+    			}
+
+    			if (dirty & /*users*/ 128) {
+    				each_value_1 = /*users*/ ctx[7];
+    				validate_each_argument(each_value_1);
+    				let i;
+
+    				for (i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+
+    					if (each_blocks_1[i]) {
+    						each_blocks_1[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks_1[i] = create_each_block_1(child_ctx);
+    						each_blocks_1[i].c();
+    						each_blocks_1[i].m(main, t21);
+    					}
+    				}
+
+    				for (; i < each_blocks_1.length; i += 1) {
+    					each_blocks_1[i].d(1);
+    				}
+
+    				each_blocks_1.length = each_value_1.length;
+    			}
+
+    			if (dirty & /*badUser*/ 256) {
+    				each_value = /*badUser*/ ctx[8];
     				validate_each_argument(each_value);
-    				validate_each_keys(ctx, each_value, get_each_context, get_key);
-    				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, ul, destroy_block, create_each_block, null, get_each_context);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(main, t24);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+
+    				if (!each_value.length && each3_else) {
+    					each3_else.p(ctx, dirty);
+    				} else if (!each_value.length) {
+    					each3_else = create_else_block(ctx);
+    					each3_else.c();
+    					each3_else.m(main, t24);
+    				} else if (each3_else) {
+    					each3_else.d(1);
+    					each3_else = null;
+    				}
     			}
     		},
     		i: function intro(local) {
@@ -1275,10 +1664,17 @@ var app = (function () {
     			if (detaching) detach_dev(main);
     			destroy_component(header);
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].d();
+    			for (let i = 0; i < each_blocks_3.length; i += 1) {
+    				each_blocks_3[i].d();
     			}
 
+    			for (let i = 0; i < each_blocks_2.length; i += 1) {
+    				each_blocks_2[i].d();
+    			}
+
+    			destroy_each(each_blocks_1, detaching);
+    			destroy_each(each_blocks, detaching);
+    			if (each3_else) each3_else.d();
     			mounted = false;
     			run_all(dispose);
     		}
@@ -1298,7 +1694,7 @@ var app = (function () {
     function instance($$self, $$props, $$invalidate) {
     	let $count;
     	validate_store(count, 'count');
-    	component_subscribe($$self, count, $$value => $$invalidate(4, $count = $$value));
+    	component_subscribe($$self, count, $$value => $$invalidate(3, $count = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('App', slots, []);
 
@@ -1314,24 +1710,36 @@ var app = (function () {
     		console.log('foo3');
     	});
 
-    	let items = [{ name: 'Ngu', status: 'done' }];
     	let name = null;
     	let status = null;
+    	let items = [{ name: 'Ngu', status: 'done' }];
 
     	function addToDo() {
     		if (name == null || status == null) {
-    			alert('Name vaf status khogn duowc de null!');
+    			alert('Name and status are required!');
     			return;
     		}
-    		$$invalidate(0, items = [...items, { name, status }]);
+    		$$invalidate(1, items = [...items, { name, status }]);
     	}
 
     	setContext('foo', 1000);
     	let smallTitle = 'Small event from parent';
 
     	function getDataFromChild(event) {
-    		console.log('foo: ', event.detail);
-    		$$invalidate(3, smallTitle = event.detail);
+    		$$invalidate(2, smallTitle = event.detail);
+    	}
+
+    	let users = [
+    		{ name: 'Jonh', age: 15 },
+    		{ name: 'Peter', age: 12 },
+    		{ name: 'Alice', age: 17 }
+    	];
+
+    	let badUser = [];
+    	let cool = 0;
+
+    	function increaseCool() {
+    		$$invalidate(10, cool++, cool);
     	}
 
     	const writable_props = [];
@@ -1342,12 +1750,12 @@ var app = (function () {
 
     	function input0_input_handler() {
     		name = this.value;
-    		$$invalidate(1, name);
+    		$$invalidate(4, name);
     	}
 
     	function input1_input_handler() {
     		status = this.value;
-    		$$invalidate(2, status);
+    		$$invalidate(0, status);
     	}
 
     	$$self.$capture_state = () => ({
@@ -1356,35 +1764,52 @@ var app = (function () {
     		onMount,
     		setContext,
     		Header,
-    		items,
+    		count,
     		name,
     		status,
+    		items,
     		addToDo,
     		smallTitle,
     		getDataFromChild,
-    		count,
+    		users,
+    		badUser,
+    		cool,
+    		increaseCool,
     		$count
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('items' in $$props) $$invalidate(0, items = $$props.items);
-    		if ('name' in $$props) $$invalidate(1, name = $$props.name);
-    		if ('status' in $$props) $$invalidate(2, status = $$props.status);
-    		if ('smallTitle' in $$props) $$invalidate(3, smallTitle = $$props.smallTitle);
+    		if ('name' in $$props) $$invalidate(4, name = $$props.name);
+    		if ('status' in $$props) $$invalidate(0, status = $$props.status);
+    		if ('items' in $$props) $$invalidate(1, items = $$props.items);
+    		if ('smallTitle' in $$props) $$invalidate(2, smallTitle = $$props.smallTitle);
+    		if ('users' in $$props) $$invalidate(7, users = $$props.users);
+    		if ('badUser' in $$props) $$invalidate(8, badUser = $$props.badUser);
+    		if ('cool' in $$props) $$invalidate(10, cool = $$props.cool);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*cool*/ 1024) {
+    			console.log('foo: ', cool);
+    		}
+    	};
+
     	return [
-    		items,
-    		name,
     		status,
+    		items,
     		smallTitle,
     		$count,
+    		name,
     		addToDo,
     		getDataFromChild,
+    		users,
+    		badUser,
+    		increaseCool,
+    		cool,
     		input0_input_handler,
     		input1_input_handler
     	];
