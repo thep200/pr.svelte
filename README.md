@@ -29,28 +29,37 @@ Cấu trúc của một file `.svelte` tương tự vue, gồm có 3 phần riê
 Cú pháp thường sử dụng
 ```js
 // Bind everything
-bind:this={var}                                  : Gán một DOM cho một biến và thực hiện logic cho DOM thông qua biến đó.
-let myInput; // Tạo một biến để lưu trữ tham chiếu đến phần tử DOM
-function focusInput() {
-myInput.focus(); // Gọi phương thức `focus()` của phần tử DOM
-}
-<input bind:this={myInput} type="text" placeholder="Type something..." />
+bind:this={var}   : Gán một DOM cho một biến và thực hiện logic cho DOM thông qua biến đó.
 
+// Example
+let myInput;
+function focusInput() {
+    myInput.focus();
+}
+<input
+    bind:this={myInput}
+    type="text"
+    placeholder="Type something..."
+/>
+```
+
+```js
 bind:offsetHeight={var}                          : gán giá trị cho biến var
 bind:value={var}                                 : gán giá trị cho biến var
+
 // on:eventname|modifiers_1|modifiers_2={handler}
 on:click={foo}                                   : gán sự kiện click gọi hàm foo
 <div>{(/^[A-Za-z]+$/).test(value) ? x : y}</div> : Kết hợp regex để render
 $: console.log('foo: ', foo);                    : Khi foo thay đổi thì thực hiện câu lệnh đằng sau `$:`
 ```
 
-<script context="module">
+> Script context="module"
 - Chạy một lần khi component đầu tiên được bind vào thay vì chạy mỗi lần.
-- Các giá trị và thư viện trong khối này được truy cập bình thường từ một thẻ <script> thông thường.
+- Các giá trị và thư viện trong khối này được truy cập bình thường từ một thẻ `script` thông thường.
 - Thường được sử dụng để khai báo các hằng số, import thư viện trong một component.
 - Sử dụng cho các tác vụ tiền biên dịch.
 
-Vòng lặp
+> Vòng lặp
 ```js
 {#each items as item} ... {/each}
 {#each items as item, index} ... {/each}
@@ -61,7 +70,7 @@ Vòng lặp
 {#each items as item} ... {:else} ... {/each}            : Khi items rỗng thì sẽ run khối code đằng sau else
 ```
 
-Await
+> Await
 ```js
 {#await promise}
 	<!-- promise is pending -->
@@ -75,13 +84,13 @@ Await
 {/await}
 ```
 
-Key
+> Key
 ```js
 // Khi expression thay đổi thì key rerender lại nội dung bên trong nó
 {#key expression} ... {/key}
 ```
 
-Cấu trúc điều kiện
+> Cấu trúc điều kiện
 ```js
 {#if condition1}
     // do something
@@ -93,7 +102,7 @@ Cấu trúc điều kiện
 ```
 
 ## Truyền dữ liệu giữa các component
-Props
+> Props
 ```js
 // child
 <script>
@@ -108,7 +117,7 @@ Props
 />
 ```
 
-Ngoài sử dụng prop chúng ta có thể sử dụng một kỹ thuật khác gọi là `context`. Context được sử dụng để truyền dữ liệu xuống component con thuộc cây của component cha mà không cần thông qua prop, tránh tình trạng drilling prop. (Tương tự như kỹ thuật injection trong vue)
+> Ngoài sử dụng prop chúng ta có thể sử dụng một kỹ thuật khác gọi là `context`. Context được sử dụng để truyền dữ liệu xuống component con thuộc cây của component cha mà không cần thông qua prop, tránh tình trạng drilling prop. (Tương tự như kỹ thuật injection trong vue)
 ```js
 // parent
 <script>
@@ -123,7 +132,7 @@ Ngoài sử dụng prop chúng ta có thể sử dụng một kỹ thuật khác
 </script>
 ```
 
-Tương tự như vue để truyền dữ liệu từ một component con lên một component cha chúng ta cần sử dụng một emit, trong svelte chúng ta định nghĩa một event và thực hiện truyền dữ liệu lên component cha thông qua event đó
+ > Tương tự như vue để truyền dữ liệu từ một component con lên một component cha chúng ta cần sử dụng một emit, trong svelte chúng ta định nghĩa một event và thực hiện truyền dữ liệu lên component cha thông qua event đó
 ```js
 // Child
 <script>
@@ -156,13 +165,13 @@ Tương tự như vue để truyền dữ liệu từ một component con lên m
 ## Store
 Svelte cung cấp cho chúng ta 3 loại store: Writable, Readable và Derived. Để sử dụng các store chúng ta có thể khai báo chúng và import vào file cần sử dụng. Sử dụng prefix `$` để gọi giá trị hoặc thay đổi giá trị của chúng.
 
-Writable store: có thể thực hiện thay đổi giá trị của một writable store.
+> Writable store: có thể thực hiện thay đổi giá trị của một writable store.
 ```js
 import { writable } from 'svelte/store';
 export const count = writable(100);
 ```
 
-Readable store: chỉ có thể thực hiện đọc giá trị của một readable store
+> Readable store: chỉ có thể thực hiện đọc giá trị của một readable store
 ```js
 import { readable } from 'svelte/store';
 export const msg = readable('Hello thep day la svelte tore!');
@@ -172,7 +181,7 @@ export const msg = readable('Hello thep day la svelte tore!');
 </main>
 ```
 
-Derived store: thực hiện các thay đổi dựa trên các store gốc, chúng ta không thể đổi giá trị của nó một cách trực tiếp.
+> Derived store: thực hiện các thay đổi dựa trên các store gốc, chúng ta không thể đổi giá trị của nó một cách trực tiếp.
 ```js
 import { derived } from 'svelte/store';
 import { count } from './writeStore';
@@ -189,5 +198,6 @@ Chúng ta có thể `bind:files` trực tiếp trong thẻ input để lấy lis
 ```js
 <svelte:self>
 ```
-
+```js
 <svelte:component this={expression}> render component theo điều kiện đặt trước.
+```
